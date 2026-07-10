@@ -1,0 +1,473 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>CaterMap – Find More Pitches</title>
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --ink:     #0f1412;
+      --bg:      #f5f7f5;
+      --card:    #ffffff;
+      --green:   #1a7a4a;
+      --green-l: #e6f4ec;
+      --accent:  #ff6b2b;
+      --muted:   #6b7a72;
+      --border:  #d8e2dc;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--ink);
+      min-height: 100vh;
+    }
+
+    /* NAV */
+    nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1.2rem 2rem;
+      background: var(--card);
+      border-bottom: 1px solid var(--border);
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+    .logo {
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 700;
+      font-size: 1.3rem;
+      color: var(--green);
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+    .logo-pin { font-size: 1.4rem; }
+    nav a {
+      font-size: 0.9rem;
+      color: var(--muted);
+      text-decoration: none;
+      font-weight: 500;
+    }
+
+    /* HERO */
+    .hero {
+      max-width: 680px;
+      margin: 0 auto;
+      padding: 5rem 2rem 4rem;
+      text-align: center;
+    }
+    .eyebrow {
+      display: inline-block;
+      background: var(--green-l);
+      color: var(--green);
+      font-size: 0.78rem;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 0.35rem 0.9rem;
+      border-radius: 999px;
+      margin-bottom: 1.6rem;
+    }
+    h1 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: clamp(2.4rem, 6vw, 3.6rem);
+      font-weight: 700;
+      line-height: 1.08;
+      letter-spacing: -0.03em;
+      color: var(--ink);
+      margin-bottom: 1.2rem;
+    }
+    h1 span { color: var(--green); }
+    .sub {
+      font-size: 1.05rem;
+      color: var(--muted);
+      line-height: 1.65;
+      max-width: 500px;
+      margin: 0 auto 2.4rem;
+    }
+
+    /* EMAIL FORM */
+    .form-row {
+      display: flex;
+      gap: 0.6rem;
+      max-width: 440px;
+      margin: 0 auto 1rem;
+    }
+    .form-row input {
+      flex: 1;
+      padding: 0.85rem 1.1rem;
+      border: 1.5px solid var(--border);
+      border-radius: 10px;
+      font-size: 0.95rem;
+      font-family: 'Inter', sans-serif;
+      background: var(--card);
+      color: var(--ink);
+      outline: none;
+      transition: border-color 0.2s;
+    }
+    .form-row input:focus { border-color: var(--green); }
+    .form-row input::placeholder { color: #aab4ae; }
+    .btn {
+      background: var(--accent);
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      padding: 0.85rem 1.4rem;
+      font-size: 0.95rem;
+      font-weight: 600;
+      font-family: 'Space Grotesk', sans-serif;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: background 0.2s, transform 0.1s;
+    }
+    .btn:hover { background: #e55a1f; transform: translateY(-1px); }
+    .form-note {
+      font-size: 0.78rem;
+      color: var(--muted);
+    }
+
+    /* MAP VISUAL */
+    .map-wrap {
+      max-width: 760px;
+      margin: 3.5rem auto 0;
+      padding: 0 2rem;
+      position: relative;
+    }
+    .map-card {
+      background: var(--card);
+      border: 1.5px solid var(--border);
+      border-radius: 20px;
+      overflow: hidden;
+      box-shadow: 0 8px 40px rgba(0,0,0,0.07);
+    }
+    .map-header {
+      padding: 0.9rem 1.2rem;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.82rem;
+      color: var(--muted);
+      font-weight: 500;
+    }
+    .map-dot { width:10px; height:10px; border-radius:50%; }
+    .map-body {
+      background: #e8efe9;
+      height: 260px;
+      position: relative;
+      overflow: hidden;
+    }
+    /* fake road lines */
+    .road {
+      position: absolute;
+      background: rgba(255,255,255,0.55);
+    }
+    .road-h { height: 6px; width: 100%; top: 38%; border-radius: 3px; }
+    .road-h2 { height: 4px; width: 80%; top: 65%; left: 10%; border-radius: 3px; }
+    .road-v { width: 5px; height: 100%; left: 30%; border-radius: 3px; }
+    .road-v2 { width: 4px; height: 100%; left: 68%; border-radius: 3px; }
+
+    /* pins */
+    .pin {
+      position: absolute;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      cursor: pointer;
+      transition: transform 0.2s;
+    }
+    .pin:hover { transform: translateY(-3px); }
+    .pin-bubble {
+      background: var(--green);
+      color: #fff;
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 0.7rem;
+      font-weight: 600;
+      padding: 0.3rem 0.6rem;
+      border-radius: 8px;
+      white-space: nowrap;
+      box-shadow: 0 3px 12px rgba(26,122,74,0.35);
+    }
+    .pin-bubble.event {
+      background: var(--accent);
+      box-shadow: 0 3px 12px rgba(255,107,43,0.35);
+    }
+    .pin-tail {
+      width: 2px;
+      height: 8px;
+      background: inherit;
+    }
+    .pin-tail-green { background: var(--green); }
+    .pin-tail-orange { background: var(--accent); }
+    .pin-dot {
+      width: 7px; height: 7px;
+      border-radius: 50%;
+      margin-top: -1px;
+    }
+    .pin-dot-green { background: var(--green); }
+    .pin-dot-orange { background: var(--accent); }
+
+    .p1 { top: 18%; left: 22%; }
+    .p2 { top: 50%; left: 48%; }
+    .p3 { top: 25%; left: 65%; }
+    .p4 { top: 58%; left: 18%; }
+    .p5 { top: 30%; left: 82%; }
+
+    /* popup */
+    .popup {
+      position: absolute;
+      top: 8%; left: 34%;
+      background: var(--card);
+      border: 1.5px solid var(--border);
+      border-radius: 12px;
+      padding: 0.8rem 1rem;
+      width: 170px;
+      box-shadow: 0 6px 24px rgba(0,0,0,0.1);
+      font-size: 0.75rem;
+    }
+    .popup-title {
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 700;
+      font-size: 0.82rem;
+      margin-bottom: 0.3rem;
+      color: var(--ink);
+    }
+    .popup-row {
+      display: flex;
+      justify-content: space-between;
+      color: var(--muted);
+      margin-bottom: 0.15rem;
+    }
+    .popup-row span:last-child { color: var(--ink); font-weight: 500; }
+    .popup-badge {
+      display: inline-block;
+      margin-top: 0.5rem;
+      background: var(--green-l);
+      color: var(--green);
+      font-size: 0.68rem;
+      font-weight: 600;
+      padding: 0.2rem 0.5rem;
+      border-radius: 999px;
+    }
+
+    /* legend */
+    .map-legend {
+      padding: 0.7rem 1.2rem;
+      border-top: 1px solid var(--border);
+      display: flex;
+      gap: 1.4rem;
+      font-size: 0.78rem;
+      color: var(--muted);
+    }
+    .legend-item { display: flex; align-items: center; gap: 0.4rem; }
+    .legend-dot { width:9px; height:9px; border-radius:50%; }
+
+    /* PROBLEM STRIP */
+    .problem {
+      max-width: 680px;
+      margin: 4rem auto 0;
+      padding: 0 2rem;
+      text-align: center;
+    }
+    .problem p {
+      font-size: 1.05rem;
+      color: var(--muted);
+      line-height: 1.65;
+    }
+    .problem p strong { color: var(--ink); }
+
+    /* FEATURES */
+    .features {
+      max-width: 760px;
+      margin: 4rem auto 0;
+      padding: 0 2rem;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1.2rem;
+    }
+    .feat {
+      background: var(--card);
+      border: 1.5px solid var(--border);
+      border-radius: 16px;
+      padding: 1.4rem 1.3rem;
+    }
+    .feat-icon {
+      font-size: 1.6rem;
+      margin-bottom: 0.8rem;
+    }
+    .feat h3 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 700;
+      font-size: 0.95rem;
+      margin-bottom: 0.4rem;
+    }
+    .feat p {
+      font-size: 0.83rem;
+      color: var(--muted);
+      line-height: 1.55;
+    }
+
+    /* CTA BOTTOM */
+    .cta-bottom {
+      max-width: 600px;
+      margin: 4rem auto 0;
+      padding: 0 2rem 5rem;
+      text-align: center;
+    }
+    .cta-bottom h2 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 1.8rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      margin-bottom: 0.8rem;
+    }
+    .cta-bottom p {
+      color: var(--muted);
+      margin-bottom: 1.8rem;
+      font-size: 0.95rem;
+    }
+
+    /* FOOTER */
+    footer {
+      border-top: 1px solid var(--border);
+      padding: 1.4rem 2rem;
+      text-align: center;
+      font-size: 0.78rem;
+      color: var(--muted);
+    }
+
+    @media (max-width: 520px) {
+      .form-row { flex-direction: column; }
+      .btn { width: 100%; }
+      h1 { font-size: 2.2rem; }
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <div class="logo"><span class="logo-pin">📍</span> CaterMap</div>
+  <a href="#waitlist">Join Waiting List</a>
+</nav>
+
+<!-- HERO -->
+<section class="hero" id="waitlist">
+  <div class="eyebrow">🚐 Launching Soon Across the UK</div>
+  <h1>Find More Pitches.<br/><span>Earn More Money.</span></h1>
+  <p class="sub">CaterMap connects mobile caterers with events and organisers across the UK — all in one place. No more endless Facebook groups or word of mouth.</p>
+
+  <div class="form-row">
+    <input type="email" placeholder="Your email address"/>
+    <button class="btn">Join Waiting List</button>
+  </div>
+  <p class="form-note">Free to join · Be first to know when we launch</p>
+</section>
+
+<!-- MAP VISUAL -->
+<div class="map-wrap">
+  <div class="map-card">
+    <div class="map-header">
+      <div class="map-dot" style="background:#ff5f57"></div>
+      <div class="map-dot" style="background:#febc2e"></div>
+      <div class="map-dot" style="background:#28c840"></div>
+      <span style="margin-left:0.4rem">CaterMap — Events near you</span>
+    </div>
+    <div class="map-body">
+      <div class="road road-h"></div>
+      <div class="road road-h2"></div>
+      <div class="road road-v"></div>
+      <div class="road road-v2"></div>
+
+      <!-- caterer pins -->
+      <div class="pin p1">
+        <div class="pin-bubble">🍔 Burger Van</div>
+        <div class="pin-tail pin-tail-green"></div>
+        <div class="pin-dot pin-dot-green"></div>
+      </div>
+      <div class="pin p3">
+        <div class="pin-bubble">🌮 Street Food</div>
+        <div class="pin-tail pin-tail-green"></div>
+        <div class="pin-dot pin-dot-green"></div>
+      </div>
+      <div class="pin p5">
+        <div class="pin-bubble">🍟 Fish &amp; Chips</div>
+        <div class="pin-tail pin-tail-green"></div>
+        <div class="pin-dot pin-dot-green"></div>
+      </div>
+
+      <!-- event pins -->
+      <div class="pin p4">
+        <div class="pin-bubble event">🎪 Village Fete</div>
+        <div class="pin-tail pin-tail-orange"></div>
+        <div class="pin-dot pin-dot-orange"></div>
+      </div>
+
+      <!-- popup -->
+      <div class="popup">
+        <div class="popup-title">🎡 Summer Car Boot</div>
+        <div class="popup-row"><span>Footfall</span><span>~400 people</span></div>
+        <div class="popup-row"><span>Pitch fee</span><span>£25/day</span></div>
+        <div class="popup-row"><span>Distance</span><span>4.2 miles</span></div>
+        <div class="popup-badge">✅ Verified organiser</div>
+      </div>
+
+      <div class="pin p2">
+        <div class="pin-bubble event">🎡 Car Boot Sale</div>
+        <div class="pin-tail pin-tail-orange"></div>
+        <div class="pin-dot pin-dot-orange"></div>
+      </div>
+    </div>
+    <div class="map-legend">
+      <div class="legend-item"><div class="legend-dot" style="background:var(--green)"></div> Caterers</div>
+      <div class="legend-item"><div class="legend-dot" style="background:var(--accent)"></div> Events &amp; Pitches</div>
+    </div>
+  </div>
+</div>
+
+<!-- PROBLEM -->
+<div class="problem">
+  <p><strong>Tired of finding pitches through word of mouth and Facebook groups?</strong><br/>
+  There's a better way. CaterMap brings every opportunity — car boots, fetes, festivals, corporate events — onto one live map so you can find and secure the right pitches faster.</p>
+</div>
+
+<!-- FEATURES -->
+<div class="features">
+  <div class="feat">
+    <div class="feat-icon">🗺️</div>
+    <h3>Live Map View</h3>
+    <p>Browse available events and pitches near you on an interactive map. Click any pin to see details instantly.</p>
+  </div>
+  <div class="feat">
+    <div class="feat-icon">⭐</div>
+    <h3>Ratings & Reviews</h3>
+    <p>Verified reviews on both caterers and organisers so you always know what you're signing up for.</p>
+  </div>
+  <div class="feat">
+    <div class="feat-icon">🔍</div>
+    <h3>Smart Filters</h3>
+    <p>Filter by cuisine type, distance, pitch fee, event size and more. Find exactly what fits your setup.</p>
+  </div>
+</div>
+
+<!-- CTA BOTTOM -->
+<div class="cta-bottom">
+  <h2>Be first on the map.</h2>
+  <p>Launching soon across the UK — join the waiting list now and be first to know.</p>
+  <div class="form-row" style="max-width:400px;margin:0 auto">
+    <input type="email" placeholder="Your email address"/>
+    <button class="btn">Join Now</button>
+  </div>
+</div>
+
+<footer>
+  © 2025 CaterMap · catermap.co.uk · Made for mobile caterers across the UK 🇬🇧
+</footer>
+
+</body>
+</html>
