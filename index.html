@@ -2,11 +2,6 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta property="og:title" content="CaterMap – Find More Pitches. Earn More Money."/>
-<meta property="og:description" content="CaterMap connects mobile caterers with events and organisers across the UK — all in one place. Join the waiting list free today!"/>
-<meta property="og:url" content="https://www.catermap.co.uk"/>
-<meta property="og:image" content="https://www.catermap.co.uk/preview.svg"/>
-
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>CaterMap – Find More Pitches</title>
   <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500&display=swap" rel="stylesheet"/>
@@ -358,8 +353,7 @@
 
 <nav>
   <div class="logo"><span class="logo-pin">📍</span> CaterMap</div>
-  <a href="https://docs.google.com/forms/d/e/1FAIpQLSevsEaAN70xJGzoJQy-2sXLweM6QuwpoIoJuH9mUFKb8p5DYw/viewform" target="_blank">Join Waiting List</a>
-
+  <a href="#join">Join Waiting List</a>
 </nav>
 
 <!-- HERO -->
@@ -369,9 +363,8 @@
   <p class="sub">CaterMap connects mobile caterers with events and organisers across the UK — all in one place. No more endless Facebook groups or word of mouth.</p>
 
   <div class="form-row">
-  <a href="https://docs.google.com/forms/d/e/1FAIpQLSevsEaAN70xJGzoJQy-2sXLweM6QuwpoIoJuH9mUFKb8p5DYw/viewform" class="btn" target="_blank">Join Waiting List</a>
-</div>
-
+    <a href="#join" class="btn">Join Waiting List</a>
+  </div>
   <p class="form-note">Free to join · Be first to know when we launch</p>
 </section>
 
@@ -461,14 +454,36 @@
   </div>
 </div>
 
-<!-- CTA BOTTOM -->
-<div class="cta-bottom">
+<!-- JOIN FORM -->
+<div class="cta-bottom" id="join">
   <h2>Be first on the map.</h2>
-  <p>Launching soon across the UK — join the waiting list now and be first to know.</p>
-  <div class="form-row" style="max-width:400px;margin:0 auto">
-   <a href="https://docs.google.com/forms/d/e/1FAIpQLSevsEaAN70xJGzoJQy-2sXLweM6QuwpoIoJuH9mUFKb8p5DYw/viewform" class="btn" target="_blank">Join Now</a>
+  <p>Launching soon across the UK — join the waiting list now and be first to know when CaterMap goes live.</p>
 
-  </div>
+  <form action="https://formspree.io/f/mrenadzb" method="POST" style="max-width:480px;margin:2rem auto 0;text-align:left;">
+    <div style="margin-bottom:1rem;">
+      <label style="display:block;font-size:0.8rem;font-weight:600;letter-spacing:0.05em;text-transform:uppercase;color:#0f1412;margin-bottom:0.4rem;">Full Name</label>
+      <input type="text" name="name" placeholder="Your name" required style="width:100%;padding:0.85rem 1rem;border:1.5px solid #d8e2dc;border-radius:8px;font-size:0.9rem;font-family:Inter,sans-serif;outline:none;"/>
+    </div>
+    <div style="margin-bottom:1rem;">
+      <label style="display:block;font-size:0.8rem;font-weight:600;letter-spacing:0.05em;text-transform:uppercase;color:#0f1412;margin-bottom:0.4rem;">Email Address</label>
+      <input type="email" name="email" placeholder="your@email.com" required style="width:100%;padding:0.85rem 1rem;border:1.5px solid #d8e2dc;border-radius:8px;font-size:0.9rem;font-family:Inter,sans-serif;outline:none;"/>
+    </div>
+    <div style="margin-bottom:1rem;">
+      <label style="display:block;font-size:0.8rem;font-weight:600;letter-spacing:0.05em;text-transform:uppercase;color:#0f1412;margin-bottom:0.4rem;">I am a...</label>
+      <select name="user_type" required style="width:100%;padding:0.85rem 1rem;border:1.5px solid #d8e2dc;border-radius:8px;font-size:0.9rem;font-family:Inter,sans-serif;outline:none;background:white;">
+        <option value="">Select one...</option>
+        <option value="caterer">Mobile Caterer</option>
+        <option value="organiser">Event Organiser</option>
+        <option value="both">Both</option>
+      </select>
+    </div>
+    <div style="margin-bottom:1.5rem;">
+      <label style="display:block;font-size:0.8rem;font-weight:600;letter-spacing:0.05em;text-transform:uppercase;color:#0f1412;margin-bottom:0.4rem;">What features would you most like to see? (optional)</label>
+      <textarea name="features" placeholder="Tell us what matters most to you..." style="width:100%;padding:0.85rem 1rem;border:1.5px solid #d8e2dc;border-radius:8px;font-size:0.9rem;font-family:Inter,sans-serif;outline:none;min-height:100px;resize:vertical;"></textarea>
+    </div>
+    <p style="font-size:0.75rem;color:#6b7a72;margin-bottom:1rem;">By signing up you agree that CaterMap may contact you with updates about the platform. Your data will not be shared with third parties.</p>
+    <button type="submit" style="width:100%;background:#ff6b2b;color:white;border:none;padding:0.95rem 2rem;border-radius:8px;font-family:Inter,sans-serif;font-size:0.95rem;font-weight:700;cursor:pointer;">Join the Waiting List 🗺️</button>
+  </form>
 </div>
 
 <footer>
